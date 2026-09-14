@@ -6,12 +6,12 @@ async function main(){
     await mongoose.connect("mongodb+srv://dilipsharma6148_db_user:LWeSqEYq86aELzQg@codingadda.ymtafbp.mongodb.net/test")
 
 
-    const userSchema=new Schema({
-        name:String,
-        age:Number,
-        city:String,
-        gender:String,
-    })
+    // const userSchema=new Schema({
+    //     name:String,
+    //     age:Number,
+    //     city:String,
+    //     gender:String,
+    // })
 
 
     // const user1=new User({name:"rahul",age:22,city:"Etah"}); //method 1 for document creation
