@@ -18,7 +18,7 @@ function validateUser(data){
             throw new Error("Weak password");
         }
 
-        if((data.firstName.length>=3 && data.firstName.length<=20)){
+        if(!(data.firstName.length>=3 && data.firstName.length<=20)){
             throw new Error("First Name should have atleast 3 character" );
         }
 

@@ -3,6 +3,7 @@ const app=express();
 const main=require("./database");
 const User=require("./Modules/user")
 const validateUser=require("./utils/validateUser")
+const bcrypt=require("bcrypt");
 
 
 app.use(express.json());
@@ -29,12 +30,27 @@ app.post("/register",async(req,res)=>{
 
         validateUser(req.body);
 
+        req.body.password=await bcrypt.hash(req.body.password,10);  //this line convert password into hash
+
 
         await User.create(req.body);
         res.send("Registration Successful");
     }catch(e){
         res.send("Erro"+e.message);
     };
+})
+
+app.post("/login",async (req,res)=>{
+    const people=await User.findById(req.body._id);
+    if(!(req.body.emailId===people.emailId)){
+        throw new Error("Invalid credentials");
+    }
+
+    const isAllowed=bcrypt.compare(req.body.password,people.password);
+    if(!(isAllowed)){
+        throw new Error("Invalid Credentials")
+    }
+    res.send("login successfully");
 })
 
 
