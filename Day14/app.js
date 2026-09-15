@@ -4,9 +4,13 @@ const main=require("./database");
 const User=require("./Modules/user")
 const validateUser=require("./utils/validateUser")
 const bcrypt=require("bcrypt");
+const { isJWT } = require("validator");
+const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken');
 
 
 app.use(express.json());
+app.use(cookieParser());
 
 
 app.post("/register",async(req,res)=>{
@@ -41,31 +45,44 @@ app.post("/register",async(req,res)=>{
 })
 
 app.post("/login",async (req,res)=>{
-    const people=await User.findById(req.body._id);
-    if(!(req.body.emailId===people.emailId)){
-        throw new Error("Invalid credentials");
-    }
+    const people=await User.findOne({emailId:req.body.emailId});
+
+    // if(!(req.body.emailId===people.emailId)){
+    //     throw new Error("Invalid credentials");
+    // }
 
     const isAllowed=bcrypt.compare(req.body.password,people.password);
     if(!(isAllowed)){
         throw new Error("Invalid Credentials")
     }
+
+    //jwt token
+    const token=jwt.sign({_id:people._id,emailId:people.emailId},"Rohit@123",{expiresIn:10});
+    res.cookie("token",token);
     res.send("login successfully");
 })
 
 
 app.get("/feed",async (req,res)=>{
     try{
+
+        //validate the user first
+        const payload=jwt.verify(req.cookies.token,"Rohit@123");
+        console.log(payload);
         const result=await User.find({});
+        // console.log(req.cookies);
         res.send(result);
     }catch(e){
         res.send("Error"+e.message);
     }
 })
 
-app.get("/user/:id",async (req,res)=>{
+app.get("/user",async (req,res)=>{
     try{
-        const result=await User.findById(req.params.id);
+
+        const payload=jwt.verify(req.cookies.token,"Rohit@123");
+        console.log(payload);
+        const result=await User.findById(payload._id);
         res.send(result);
     }catch(e){
         res.send("Error"+e.message);
