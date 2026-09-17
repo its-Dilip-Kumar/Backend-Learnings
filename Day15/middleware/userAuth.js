@@ -10,6 +10,7 @@ const userAuth=async (req,res,next)=>{
         if(!token){
             throw new Error("Token Does't exits");
         }
+
         const payload=jwt.verify(token,"Rohit@123");
         // console.log(payload);
 

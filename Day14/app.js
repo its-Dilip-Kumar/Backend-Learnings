@@ -79,7 +79,6 @@ app.get("/feed",async (req,res)=>{
 
 app.get("/user",async (req,res)=>{
     try{
-
         const payload=jwt.verify(req.cookies.token,"Rohit@123");
         console.log(payload);
         const result=await User.findById(payload._id);

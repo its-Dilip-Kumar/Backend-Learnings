@@ -52,7 +52,6 @@ app.patch("/book",(req,res)=>{
 app.put("/book",(req,res)=>{
     const book=BookStore.find(Info=>Info.id===req.body.id);
     book.author=req.body.author;
-    book.name=req.body.name;
     res.send("Put Updated");
 })
 
