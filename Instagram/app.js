@@ -8,10 +8,13 @@ const jwt=require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const userAuth=require("./middleware/userAuth");
 const redisClient=require("./config/redis");
+const rateLimiter = require("./middleware/rateLimiter");
 require('dotenv').config()
 
 app.use(express.json());
 app.use(cookieParser()); 
+
+app.use(rateLimiter); //fixed window algorithm for rate limiting
 
 app.post("/register",async(req,res)=>{
     try{
