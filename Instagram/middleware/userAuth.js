@@ -1,5 +1,6 @@
 const jwt=require("jsonwebtoken");
-const User=require("../modules/user")
+const User=require("../modules/user");
+const redisClient = require("../config/redis");
 require('dotenv').config()
 
 const UserAuth=async (req,res,next)=>{
@@ -18,6 +19,11 @@ const UserAuth=async (req,res,next)=>{
     const result=await User.findOne({_id:_id});
     if(!result){
         throw new Error("User does not exists");
+    }
+
+    const isBlocked=await redisClient.exists(`token:${token}`);
+    if(isBlocked){
+        throw new Error("Invalid Token");
     }
 
     req.result=result;

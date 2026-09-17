@@ -1,9 +1,9 @@
 const mongoose=require("mongoose");
 const {Schema}=mongoose;
+require('dotenv').config()
 
 async function main(){
-    await mongoose.connect("mongodb+srv://dilipsharma6148_db_user:LWeSqEYq86aELzQg@codingadda.ymtafbp.mongodb.net/InstagramBackend");
-    console.log("Connected to DB")
+    await mongoose.connect(process.env.MONGO_URI);
 }
 
 module.exports=main;
